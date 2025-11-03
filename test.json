@@ -1,0 +1,69 @@
+{
+  "auto": {
+    "meta": {
+      "region": {
+        "country": "Bangladesh",
+        "city": "Dhaka"
+      },
+      "info": {
+        "established": 2015
+      }
+    },
+    "driver_types": {
+      "auto": {
+        "details": {
+          "img_url": "https://example.com/driver.png",
+          "status": {
+            "is_active": true,
+            "availability": {
+              "is_open_for_signup": false,
+              "new_driver": {
+                "requirements": {
+                  "verify_otp_for_signup": true,
+                  "documents": ["license", "nid"]
+                }
+              }
+            }
+          }
+        },
+        "name": {
+          "localization": {
+            "bn": "অটো",
+            "en": "Auto"
+          }
+        }
+      },
+      "bike": {
+        "details": {
+          "img_url": "https://example.com/bike.png",
+          "status": {
+            "is_active": true,
+            "availability": {
+              "is_open_for_signup": true,
+              "new_driver": {
+                "requirements": {
+                  "verify_otp_for_signup": false,
+                  "documents": ["license"]
+                }
+              }
+            }
+          }
+        },
+        "name": {
+          "localization": {
+            "bn": "বাইক",
+            "en": "Bike"
+          }
+        }
+      }
+    },
+    "verify_otp": {
+      "for_signup": {
+        "enabled": false,
+        "policy": {
+          "message": "OTP verification required only if enabled."
+        }
+      }
+    }
+  }
+}

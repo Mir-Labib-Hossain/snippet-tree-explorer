@@ -20,3 +20,11 @@ npm run preview
 - `src/main.tsx` — Entry
 
 See [vitejs.dev](https://vitejs.dev/) and [react.dev](https://react.dev/)
+
+Deliveries:
+Git Repo Link:
+
+Project Brief:
+
+1. To make a TreeExplorer feature:
+   i have use React....

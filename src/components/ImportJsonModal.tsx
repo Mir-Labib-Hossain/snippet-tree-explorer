@@ -1,60 +1,75 @@
 import { useState } from "react";
+import dummyData from "../../dummy-data.json?raw";
 import { Button } from "./ui/Button";
+import { Alert } from "./ui/Alert";
 import { Modal } from "./ui/Modal";
 import type { TreeBranch } from "./TreeView";
 
-function ImportJsonModal({
-  treeData,
-  setTreeData,
-}: {
+type Props = {
   treeData: TreeBranch | null;
-  setTreeData: React.Dispatch<React.SetStateAction<TreeBranch | null>>;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
+  onConfirm: (data: TreeBranch) => void;
+  onClose: () => void;
+};
+
+function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
   const [text, setText] = useState(
     treeData ? JSON.stringify(treeData, null, 2) : "",
   );
   const [error, setError] = useState<string | null>(null);
 
-  function closeModal() {
-    setIsOpen(false);
-    setText("");
-    setError(null);
-  }
-
   function handleImport() {
     try {
       const parsed = JSON.parse(text);
+      const isObject =
+        typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
 
-      if (!isTreeRoot(parsed)) {
-        throw new Error("Top-level value must be an object or array.");
+      if (!isObject) {
+        throw new Error("Kindly enter a valid JSON object.");
       }
 
-      setTreeData(parsed);
-      closeModal();
+      onConfirm(parsed);
+      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to parse JSON.");
     }
   }
 
   return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Import</Button>
-      <Modal
-        open={isOpen}
-        onClose={closeModal}
-        title="Import JSON"
-        footer={
-          <>
-            <Button variant="secondary" onClick={closeModal}>
+    <Modal
+      open={true}
+      onClose={onClose}
+      title="Import JSON"
+      footer={
+        <div className="flex justify-between w-full">
+          <div>
+            {!text && (
+              <Button
+                onClick={() => {
+                  setText(dummyData);
+                  if (error) {
+                    setError(null);
+                  }
+                }}
+              >
+                Save time
+                <span className="ml-2 text-sm font-light">
+                  (Insert Random Data)
+                </span>
+              </Button>
+            )}
+          </div>
+          <div className="space-x-2">
+            <Button variant="secondary" onClick={onClose}>
               Cancel
             </Button>
             <Button onClick={handleImport}>
-              {treeData ? "Edit" : "Import"}
+              {treeData ? "Update" : "Import"}
             </Button>
-          </>
-        }
-      >
+          </div>
+        </div>
+      }
+    >
+      <div className="space-y-4">
         <textarea
           value={text}
           onChange={(e) => {
@@ -63,22 +78,13 @@ function ImportJsonModal({
               setError(null);
             }
           }}
-          className="block w-full rounded border border-[#C8DAE2] p-2 font-mono text-sm"
-          rows={8}
+          className="block w-full rounded border border-[#C8DAE2] p-2 font-mono text-sm h-[60vh]"
           placeholder="Paste your JSON here"
         />
-        {error && (
-          <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-      </Modal>
-    </>
+        <Alert variant="error">{error}</Alert>
+      </div>
+    </Modal>
   );
 }
 
 export default ImportJsonModal;
-
-function isTreeRoot(value: unknown): value is TreeBranch {
-  return typeof value === "object" && value !== null;
-}

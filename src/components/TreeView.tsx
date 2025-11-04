@@ -1,9 +1,13 @@
 import { useState } from "react";
 
-export type TreeBranch = Record<string, unknown> | unknown[];
+export type TreeBranch = Record<string, unknown>;
 
-type TreeViewProps = {
+type Props = {
   data: TreeBranch;
+  selectedPath: string | null;
+  openDeleteModal: () => void;
+  openRenameModal: () => void;
+  onSelectPath: (path: string) => void;
 };
 
 type TreeNodeProps = {
@@ -12,14 +16,17 @@ type TreeNodeProps = {
   path: string;
   prefix: string;
   isLast: boolean;
+  parentIsArray: boolean;
+  selectedPath: string | null;
+  openDeleteModal: () => void;
+  openRenameModal: () => void;
+  onSelectPath: (path: string) => void;
 };
 
-export default function TreeView({ data }: TreeViewProps) {
+export default function TreeView({ data, ...props }: Props) {
   const entries = getChildItems(data);
 
-  if (entries.length === 0) {
-    return null;
-  }
+  if (entries?.length === 0) return null;
 
   return (
     <div>
@@ -31,28 +38,38 @@ export default function TreeView({ data }: TreeViewProps) {
           path={key}
           prefix=""
           isLast={index === entries.length - 1}
+          parentIsArray={Array.isArray(data)}
+          {...props}
         />
       ))}
     </div>
   );
 }
 
-function TreeNode({ label, value, path, prefix, isLast }: TreeNodeProps) {
+function TreeNode({
+  label,
+  value,
+  path,
+  prefix,
+  isLast,
+  parentIsArray,
+  selectedPath,
+  openDeleteModal,
+  openRenameModal,
+  onSelectPath,
+}: TreeNodeProps) {
   const childItems = getChildItems(value);
   const isExpandable = childItems.length > 0;
   const [isOpen, setIsOpen] = useState(true);
   const connector = `${prefix}${isLast ? " ┗ " : " ┣ "}`;
   const arrow = (
-    <>
-      {" "}
-      <span
-        className={`font-bold duration-500 ${
-          isOpen ? "rotate-90" : "rotate-0"
-        }`}
-      >
-        ›
-      </span>
-    </>
+    <span
+      className={`px-2 font-bold duration-500 ${
+        isOpen ? "rotate-90" : "rotate-0"
+      }`}
+    >
+      ›
+    </span>
   );
   const nodeLabelPrefix = (
     <>
@@ -61,24 +78,55 @@ function TreeNode({ label, value, path, prefix, isLast }: TreeNodeProps) {
     </>
   );
 
-  const handleToggle = () => {
+  const onExpandToggle = () => {
+    onSelectPath(path);
     if (isExpandable) {
       setIsOpen((prev) => !prev);
     }
   };
 
+  const isChildNode = Boolean(prefix);
+  const showRename = !parentIsArray;
+
   return (
     <div>
-      <div
-        className={`whitespace-pre-wrap ${
-          isExpandable ? "cursor-pointer select-none" : ""
-        } flex items-center`}
-        onClick={handleToggle}
-      >
-        <span className="text-[30px] leading-[30px] flex items-center font-extralight">
-          {nodeLabelPrefix}
-        </span>
-        <span className="text-lg">{label}</span>
+      <div className="flex justify-between">
+        <div
+          className="whitespace-pre-wrap cursor-pointer select-none flex items-center"
+          onClick={onExpandToggle}
+        >
+          <span className="text-[30px] leading-[30px] flex items-center font-extralight">
+            {nodeLabelPrefix}
+          </span>
+          <span
+            className={`text-lg hover:text-[#4F92EE] duration-500 ${
+              selectedPath === path ? "text-[#4F92EE]" : ""
+            }`}
+          >
+            {label}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {showRename && (
+            <ActionButton
+              variant="rename"
+              onClick={() => {
+                onSelectPath(path);
+                openRenameModal();
+              }}
+            />
+          )}
+          {isChildNode && (
+            <ActionButton
+              variant="delete"
+              onClick={() => {
+                onSelectPath(path);
+                openDeleteModal();
+              }}
+            />
+          )}
+        </div>
       </div>
       {isExpandable && isOpen && (
         <div>
@@ -90,6 +138,11 @@ function TreeNode({ label, value, path, prefix, isLast }: TreeNodeProps) {
               path={`${path}.${childKey}`}
               prefix={`${prefix}${isLast ? "     " : " ┃"}`}
               isLast={index === childItems.length - 1}
+              selectedPath={selectedPath}
+              openDeleteModal={openDeleteModal}
+              openRenameModal={openRenameModal}
+              onSelectPath={onSelectPath}
+              parentIsArray={Array.isArray(value)}
             />
           ))}
         </div>
@@ -97,6 +150,28 @@ function TreeNode({ label, value, path, prefix, isLast }: TreeNodeProps) {
     </div>
   );
 }
+
+const ActionButton = ({
+  onClick,
+  variant,
+}: {
+  onClick: () => void;
+  variant: "rename" | "delete";
+}) => {
+  const variantClasses = {
+    rename: "bg-[#4F92EE]",
+    delete: "bg-[#E3494B]",
+  };
+  return (
+    <button
+      type="button"
+      className={`text-white w-5 h-5 flex items-center justify-center rounded-full cursor-pointer text-xs ${variantClasses[variant]}`}
+      onClick={onClick}
+    >
+      {variant === "rename" ? "✎" : "-"}
+    </button>
+  );
+};
 
 function getChildItems(value: unknown): [string, unknown][] {
   if (Array.isArray(value)) {
@@ -109,6 +184,3 @@ function getChildItems(value: unknown): [string, unknown][] {
 
   return [];
 }
-
-// const light = "│└├ ";
-// const dark = " ┃ ┗ ┣ ";

@@ -1,0 +1,12 @@
+[default.extend-words]
+Vite = "Vite"
+vite = "vite"
+Vercel = "Vercel"
+vercel = "vercel"
+Nginx = "Nginx"
+nginx = "nginx"
+Nextjs = "Nextjs"
+Tailwind = "Tailwind"
+JS = "JS"
+js = "js"
+

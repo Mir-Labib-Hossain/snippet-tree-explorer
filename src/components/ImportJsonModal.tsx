@@ -39,7 +39,7 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
       onClose={onClose}
       title="Import JSON"
       footer={
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full flex-wrap gap-2">
           <div>
             {!text && (
               <Button

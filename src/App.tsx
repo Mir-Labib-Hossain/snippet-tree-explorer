@@ -138,18 +138,18 @@ function App() {
     <div className="flex min-h-screen items-center justify-center bg-[#f7f3ee]">
       <div className="container mx-auto px-4 py-8 space-y-6">
         {/* Header */}
-        <div className="grid grid-cols-10 gap-4 mb-2">
-          <p className="col-span-4 text-2xl font-bold tracking-wide text-[#333]">
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-4 mb-2">
+          <p className="col-span-1 md:col-span-4 text-2xl font-bold tracking-wide text-[#333]">
             Tree
           </p>
-          <p className="col-span-6 text-2xl truncate text-[#444]">
+          <p className="col-span-1 md:col-span-6 text-2xl truncate text-[#444]">
             {breadcrumb}
           </p>
         </div>
 
-        <div className="grid grid-cols-10 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
           {/* Tree Section */}
-          <div className="col-span-4">
+          <div className="col-span-1 md:col-span-4">
             {treeData ? (
               <Card className="max-h-[70vh] overflow-auto shadow-md">
                 <TreeView
@@ -167,7 +167,7 @@ function App() {
           </div>
 
           {/* JSON View & Controls */}
-          <div className="col-span-6 space-y-4">
+          <div className="col-span-1 md:col-span-6 space-y-4">
             {treeData ? (
               <Card className="max-h-[70vh] overflow-auto shadow-md">
                 <pre className="whitespace-pre text-sm font-mono cursor-default">
@@ -179,7 +179,7 @@ function App() {
             )}
 
             {/* Controls */}
-            <div className="flex flex-row gap-4">
+            <div className="flex gap-4 flex-wrap">
               <Button onClick={() => toggleModal("importJson")}>
                 {treeData ? "Modify" : "Import"}
               </Button>

@@ -21,21 +21,21 @@
         "name_bn": "অটো",
         "name_en": "Auto"
       },
-      "bike": {
-        "img_url": "https://example.com/bike.png",
-        "active": true,
-        "open_for_signup": true,
-        "require_otp": false,
-        "documents": {
-          "license": {
-            "name": "License",
-            "required": true
-          }
-        },
-        "name_bn": "বাইক",
-        "name_en": "Bike"
-      }
+      "otp_signup_enabled": false
     },
-    "otp_signup_enabled": false
+    "bike": {
+      "img_url": "https://example.com/bike.png",
+      "active": true,
+      "open_for_signup": true,
+      "require_otp": false,
+      "documents": {
+        "license": {
+          "name": "License",
+          "required": true
+        }
+      },
+      "name_bn": "বাইক",
+      "name_en": "Bike"
+    }
   }
 }

@@ -91,7 +91,7 @@ function TreeNode({
   const rootPadding = NBSP.repeat(6);
   const arrow = (
     <span
-      className={`px-2 font-bold duration-500 ${
+      className={`pl-3 pr-2 font-bold duration-500 ${
         isOpen ? "rotate-90" : "rotate-0"
       }`}
     >

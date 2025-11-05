@@ -13,6 +13,7 @@ import TreeView, { type TreeBranch } from "./components/TreeView";
 
 import {
   cloneTree,
+  moveNode,
   removeNodeAtPath,
   renameNodeAtPath,
   stringifyTreeData,
@@ -124,6 +125,19 @@ function App() {
     saveTreeData(data);
   };
 
+  const onMoveNode = (sourcePath: string, targetPath: string) => {
+    if (!treeData) return;
+
+    const clonedTree = cloneTree(treeData);
+    const nextPath = moveNode(clonedTree, sourcePath, targetPath);
+    if (!nextPath) {
+      return;
+    }
+
+    saveTreeData(clonedTree);
+    saveSelectedPath(nextPath);
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f7f3ee]">
       <div className="container mx-auto px-4 py-8 space-y-6">
@@ -146,6 +160,7 @@ function App() {
                   data={treeData}
                   selectedPath={selectedPath}
                   onSelectPath={saveSelectedPath}
+                  onMoveNode={onMoveNode}
                   openDeleteModal={() => toggleModal("deleteNode")}
                   openRenameModal={() => toggleModal("renameNode")}
                 />

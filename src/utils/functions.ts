@@ -18,6 +18,30 @@ export const cloneTree = (treeData: TreeBranch): TreeBranch =>
 const isRecord = (val: unknown): val is Record<string, unknown> =>
   typeof val === "object" && val !== null && !Array.isArray(val);
 
+export function getNodeAtPath(treeData: TreeBranch, path: string): unknown {
+  const segments = path.split(".");
+  let node: unknown = treeData;
+
+  for (const seg of segments) {
+    if (Array.isArray(node)) {
+      const idx = Number(seg);
+      if (!Number.isInteger(idx) || idx < 0 || idx >= node.length) {
+        return undefined;
+      }
+      node = node[idx];
+      continue;
+    }
+
+    if (!isRecord(node) || !(seg in node)) {
+      return undefined;
+    }
+
+    node = (node as Record<string, unknown>)[seg];
+  }
+
+  return node;
+}
+
 /**
  * Finds the parent object/array and the key for the node at a given path.
  */
@@ -105,4 +129,72 @@ export function getSiblingKeys(
     ),
     parentIsArray: false,
   };
+}
+
+const makeUniqueKey = (
+  baseKey: string,
+  container: Record<string, unknown>,
+): string => {
+  if (!(baseKey in container)) return baseKey;
+
+  let index = 1;
+  let candidate = `${baseKey}_${index}`;
+  while (candidate in container) {
+    index += 1;
+    candidate = `${baseKey}_${index}`;
+  }
+  return candidate;
+};
+
+export function moveNode(
+  treeData: TreeBranch,
+  fromPath: string,
+  toPath: string,
+): string | null {
+  if (fromPath === toPath || toPath.startsWith(`${fromPath}.`)) {
+    return null;
+  }
+
+  const target = getNodeAtPath(treeData, toPath);
+  if (!isRecord(target) && !Array.isArray(target)) {
+    return null;
+  }
+
+  const sourceContext = getParentAtPath(treeData, fromPath);
+  if (!sourceContext) return null;
+
+  const { parent, key } = sourceContext;
+  const keyAsString = String(key);
+
+  let value: unknown;
+
+  if (Array.isArray(parent)) {
+    const idx = Number(keyAsString);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= parent.length) {
+      return null;
+    }
+    value = parent[idx];
+    parent.splice(idx, 1);
+  } else {
+    if (!(keyAsString in parent)) {
+      return null;
+    }
+    value = (parent as Record<string, unknown>)[keyAsString];
+    delete (parent as Record<string, unknown>)[keyAsString];
+  }
+
+  if (Array.isArray(target)) {
+    target.push(value);
+    return `${toPath}.${target.length - 1}`;
+  }
+
+  const targetRecord = target as Record<string, unknown>;
+  const hasSameParent = target === parent;
+  const nextKey = hasSameParent
+    ? keyAsString
+    : makeUniqueKey(keyAsString, targetRecord);
+
+  targetRecord[nextKey] = value;
+
+  return `${toPath}.${nextKey}`;
 }

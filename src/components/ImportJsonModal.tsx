@@ -1,9 +1,10 @@
 import { useState } from "react";
-import dummyData from "../../dummy-data.json?raw";
-import { Button } from "./ui/Button";
 import { Alert } from "./ui/Alert";
 import { Modal } from "./ui/Modal";
+import { Button } from "./ui/Button";
 import type { TreeBranch } from "./TreeView";
+import { stringifyTreeData } from "../utils/functions";
+import dummyData from "../../dummy-data.json?raw";
 
 type Props = {
   treeData: TreeBranch | null;
@@ -12,9 +13,7 @@ type Props = {
 };
 
 function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
-  const [text, setText] = useState(
-    treeData ? JSON.stringify(treeData, null, 2) : "",
-  );
+  const [text, setText] = useState(stringifyTreeData(treeData));
   const [error, setError] = useState<string | null>(null);
 
   function handleImport() {
@@ -79,7 +78,7 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
             }
           }}
           className="block w-full rounded border border-[#C8DAE2] p-2 font-mono text-sm h-[60vh]"
-          placeholder="Paste your JSON here"
+          placeholder="Input your JSON here . . ."
         />
         <Alert variant="error">{error}</Alert>
       </div>

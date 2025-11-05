@@ -1,15 +1,6 @@
 @import "tailwindcss";
 
-@layer base {
-  html {
-    background-color: #f6f4f1;
-    color: #121212;
-  }
-
-  body {
-    @apply min-h-screen bg-[#f6f4f1];
-  }
-}
+/* Simple animation for Modal */
 
 @keyframes modal-pop {
   0% {

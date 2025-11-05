@@ -32,6 +32,7 @@ export function Modal({ open, onClose, title, footer, children }: ModalProps) {
             ×
           </Button>
         </div>
+
         {title && (
           <h2 className="font-mono pr-10 text-xl font-semibold tracking-tight text-neutral-900">
             {title}

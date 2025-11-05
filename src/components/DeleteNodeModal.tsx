@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function DeleteNodeModal({ path, onConfirm, onClose }: Props) {
-  const label = path?.split(".").pop() ?? path;
+  const selectedKey = path?.split(".").pop() ?? path;
 
   return (
     <Modal
@@ -28,8 +28,8 @@ export default function DeleteNodeModal({ path, onConfirm, onClose }: Props) {
     >
       {path ? (
         <p>
-          Are you sure you want to delete <strong>{label}</strong>? This action
-          cannot be undone.
+          Are you sure you want to delete <strong>{selectedKey}</strong>? This
+          action cannot be undone.
         </p>
       ) : (
         <p>Select a node to delete.</p>

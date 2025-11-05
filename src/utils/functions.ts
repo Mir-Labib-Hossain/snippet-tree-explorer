@@ -5,137 +5,104 @@ type ParentInfo = {
   key: string;
 };
 
-export const cloneTree = (treeData: TreeBranch): TreeBranch => {
-  return JSON.parse(JSON.stringify(treeData)) as TreeBranch;
-};
+export function stringifyTreeData(treeData: TreeBranch | null): string {
+  return treeData ? JSON.stringify(treeData, null, 2) : "";
+}
 
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-};
+/**
+ *  Deep clone using JSON methods for immutability
+ */
+export const cloneTree = (treeData: TreeBranch): TreeBranch =>
+  JSON.parse(JSON.stringify(treeData)) as TreeBranch;
 
-export const getParentAtPath = (
+const isRecord = (val: unknown): val is Record<string, unknown> =>
+  typeof val === "object" && val !== null && !Array.isArray(val);
+
+/**
+ * Finds the parent object/array and the key for the node at a given path.
+ */
+export function getParentAtPath(
   treeData: TreeBranch,
   path: string,
-): ParentInfo | null => {
+): ParentInfo | null {
   const segments = path.split(".");
   const key = segments.pop();
+  if (!key) return null;
 
-  if (!key) {
-    return null;
+  let node: unknown = treeData;
+  for (const seg of segments) {
+    if (!isRecord(node) || !(seg in node)) return null;
+    node = node[seg];
   }
+  if (!isRecord(node) && !Array.isArray(node)) return null;
+  return { parent: node, key };
+}
 
-  let current: unknown = treeData;
-
-  for (const segment of segments) {
-    if (!isRecord(current) || !(segment in current)) {
-      return null;
-    }
-
-    current = current[segment];
-  }
-
-  if (!isRecord(current) && !Array.isArray(current)) {
-    return null;
-  }
-
-  return { parent: current, key };
-};
-
-export const removeNodeAtPath = (
-  treeData: TreeBranch,
-  path: string,
-): boolean => {
+/**
+ * Removes the node at the specified path.
+ */
+export function removeNodeAtPath(treeData: TreeBranch, path: string): boolean {
   const context = getParentAtPath(treeData, path);
-
-  if (!context) {
-    return false;
-  }
-
+  if (!context) return false;
   const { parent, key } = context;
 
   if (Array.isArray(parent)) {
-    const index = Number(key);
-
-    if (Number.isNaN(index) || index < 0 || index >= parent.length) {
-      return false;
-    }
-
-    parent.splice(index, 1);
+    const idx = Number(key);
+    if (!Number.isInteger(idx) || idx < 0 || idx >= parent.length) return false;
+    parent.splice(idx, 1);
     return true;
   }
 
-  if (!(key in parent)) {
-    return false;
-  }
-
+  if (!(key in parent)) return false;
   delete parent[key];
   return true;
-};
+}
 
-export const renameNodeAtPath = (
+/**
+ * Renames a key of an object node at the specified path.
+ */
+export function renameNodeAtPath(
   treeData: TreeBranch,
   path: string,
   nextKey: string,
-): boolean => {
+): boolean {
   const context = getParentAtPath(treeData, path);
-
-  if (!context) {
-    return false;
-  }
+  if (!context) return false;
 
   const { parent, key } = context;
+  if (Array.isArray(parent)) return false;
+  if (!(key in parent) || key === nextKey || nextKey in parent) return false;
 
-  if (Array.isArray(parent)) {
-    return false;
-  }
-
-  if (!(key in parent) || key === nextKey || nextKey in parent) {
-    return false;
-  }
-
-  const record = parent as Record<string, unknown>;
-  const entries = Object.entries(record);
-
-  const updatedEntries = entries.map(([entryKey, entryValue]) =>
-    entryKey === key ? [nextKey, entryValue] : [entryKey, entryValue],
-  );
-
-  for (const existingKey of Object.keys(record)) {
-    delete record[existingKey];
-  }
-
-  for (const [entryKey, entryValue] of updatedEntries) {
-    record[entryKey as keyof typeof record] = entryValue;
-  }
-
+  const obj = parent as Record<string, unknown>;
+  obj[nextKey] = obj[key];
+  delete obj[key];
   return true;
-};
+}
 
-export const getSiblingKeys = (
+/**
+ * Gets label (current key), sibling keys and parent type info.
+ */
+export function getSiblingKeys(
   treeData: TreeBranch,
   path: string,
-): { label: string; siblings: string[]; parentIsArray: boolean } | null => {
+): { label: string; siblings: string[]; parentIsArray: boolean } | null {
   const context = getParentAtPath(treeData, path);
-
-  if (!context) {
-    return null;
-  }
-
+  if (!context) return null;
   const { parent, key } = context;
 
   if (Array.isArray(parent)) {
     return {
       label: key,
-      siblings: parent.map((_, index) => String(index)),
+      siblings: parent.map((_, idx) => String(idx)),
       parentIsArray: true,
     };
   }
 
-  const record = parent as Record<string, unknown>;
-
   return {
     label: key,
-    siblings: Object.keys(record).filter((sibling) => sibling !== key),
+    siblings: Object.keys(parent as Record<string, unknown>).filter(
+      (k) => k !== key,
+    ),
     parentIsArray: false,
   };
-};
+}

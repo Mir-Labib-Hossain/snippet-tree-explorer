@@ -84,7 +84,11 @@ function TreeNode({
   const childItems = getChildItems(value);
   const isExpandable = childItems.length > 0;
   const [isOpen, setIsOpen] = useState(true);
-  const connector = `${prefix}${isLast ? " ┗ " : " ┣ "}`;
+  const NBSP = "\u00A0";
+  const normalizedPrefix = prefix.replace(/ /g, NBSP);
+  const branchConnector = isLast ? `${NBSP}┗${NBSP}` : `${NBSP}┣${NBSP}`;
+  const connector = `${normalizedPrefix}${branchConnector}`;
+  const rootPadding = NBSP.repeat(6);
   const arrow = (
     <span
       className={`px-2 font-bold duration-500 ${
@@ -96,7 +100,7 @@ function TreeNode({
   );
   const nodeLabelPrefix = (
     <>
-      {prefix ? connector : "       "}
+      {prefix ? connector : rootPadding}
       {isExpandable && arrow}
     </>
   );
@@ -251,7 +255,9 @@ function TreeNode({
               label={childKey}
               value={childValue}
               path={`${path}.${childKey}`}
-              prefix={`${prefix}${isLast ? "     " : " ┃"}`}
+              prefix={`${normalizedPrefix}${
+                isLast ? NBSP.repeat(5) : `${NBSP}┃`
+              }`}
               isLast={index === childItems.length - 1}
               selectedPath={selectedPath}
               openDeleteModal={openDeleteModal}

@@ -59,7 +59,7 @@ function App() {
     if (!lastHistory) return;
 
     if (lastHistory.treeData) {
-      saveTreeData(lastHistory.treeData);
+      saveTreeData(lastHistory.treeData, true);
     } else {
       clearTreeData();
     }
@@ -67,11 +67,16 @@ function App() {
   };
 
   // Save handlers
-  const saveTreeData = (data: TreeBranch | null) => {
-    setLastHistory({
-      treeData: treeData ? cloneTree(treeData) : null,
-      selectedPath,
-    });
+  const saveTreeData = (data: TreeBranch | null, isUndo = false) => {
+    setLastHistory(
+      isUndo
+        ? null
+        : {
+            treeData: treeData ? cloneTree(treeData) : null,
+            selectedPath,
+          },
+    );
+
     setTreeData(data);
     localStorage.setItem("treeData", JSON.stringify(data));
   };
@@ -119,6 +124,7 @@ function App() {
   // Handle import confirm
   const onImport = (data: TreeBranch) => {
     saveTreeData(data);
+    saveSelectedPath(null);
   };
 
   const onMoveNode = (sourcePath: string, targetPath: string) => {
@@ -184,18 +190,18 @@ function App() {
                 {treeData ? "Modify" : "Import"}
               </Button>
               <Button
-                onClick={undoLastAction}
-                variant="secondary"
-                disabled={!lastHistory}
-              >
-                Undo
-              </Button>
-              <Button
                 onClick={clearTreeData}
                 variant="danger"
                 disabled={!treeData}
               >
                 Clear
+              </Button>
+              <Button
+                onClick={undoLastAction}
+                variant="secondary"
+                disabled={!lastHistory}
+              >
+                Undo
               </Button>
             </div>
           </div>

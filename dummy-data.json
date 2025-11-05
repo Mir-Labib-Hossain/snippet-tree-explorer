@@ -8,7 +8,16 @@
         "active": true,
         "open_for_signup": false,
         "require_otp": true,
-        "documents": ["license", "nid"],
+        "documents": {
+          "license": {
+            "name": "License",
+            "required": true
+          },
+          "nid": {
+            "name": "National ID",
+            "required": true
+          }
+        },
         "name_bn": "অটো",
         "name_en": "Auto"
       },
@@ -17,7 +26,12 @@
         "active": true,
         "open_for_signup": true,
         "require_otp": false,
-        "documents": ["license"],
+        "documents": {
+          "license": {
+            "name": "License",
+            "required": true
+          }
+        },
         "name_bn": "বাইক",
         "name_en": "Bike"
       }

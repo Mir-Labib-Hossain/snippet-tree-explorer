@@ -195,7 +195,7 @@ function TreeNode({
   return (
     <div>
       <div
-        className={`flex justify-between cursor-pointer select-none rounded-md px-1 transition-colors ${
+        className={`flex justify-between cursor-pointer select-none rounded-md px-1 transition-colors group ${
           isDropTarget
             ? "bg-[#eaf0f9] ring-1 ring-[#4F92EE] shadow-[0_0_10px_rgba(79,146,238,0.5)]"
             : ""
@@ -214,7 +214,7 @@ function TreeNode({
             {nodeLabelPrefix}
           </span>
           <span
-            className={`text-lg hover:text-[#4F92EE] duration-500 ${
+            className={`text-lg duration-500 group-hover:text-[#4F92EE] ${
               selectedPath === path ? "text-[#4F92EE]" : ""
             }`}
           >
@@ -282,11 +282,17 @@ const ActionButton = ({
     rename: "bg-[#76a7eb]",
     delete: "bg-[#E3494B]",
   };
+
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onClick();
+  };
+
   return (
     <button
       type="button"
       className={`text-white w-5 h-5 flex items-center justify-center rounded-full cursor-pointer text-xs ${variantClasses[variant]}`}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {variant === "rename" ? "✎" : "-"}
     </button>

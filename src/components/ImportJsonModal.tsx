@@ -26,6 +26,10 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
         throw new Error("Kindly enter a valid JSON object.");
       }
 
+      if (Object.keys(parsed)?.length !== 1) {
+        throw new Error("JSON object must contain exactly one root property.");
+      }
+
       onConfirm(parsed);
       onClose();
     } catch (err) {
@@ -43,6 +47,7 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
           <div>
             {!text && (
               <Button
+                variant="success"
                 onClick={() => {
                   setText(dummyData);
                   if (error) {
@@ -61,7 +66,7 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
             <Button variant="secondary" onClick={onClose}>
               Cancel
             </Button>
-            <Button onClick={handleImport}>
+            <Button onClick={handleImport} disabled={!text}>
               {treeData ? "Update" : "Import"}
             </Button>
           </div>

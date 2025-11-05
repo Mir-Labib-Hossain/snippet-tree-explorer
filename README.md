@@ -1,12 +1,13 @@
 # Tree Explorer
 
-Interactive tree inspector with CRUD actions, persistence, undo, and drag-and-drop.
+Tree Explorer with CRUD actions, persistence, undo, and drag-and-drop.
 
 ## Quick Summary
 
+- **Git Repo**: https://github.com/Mir-Labib-Hossain/snippet-tree-explorer
+- **Live Demo**: https://tree-explorer-gold.vercel.app
 - **Framework**: React + `vite` — single-page scope with client-side persistence; `vite` keeps builds fast and avoids routing/SSR overhead from Next JS.
-- **Styling**: Used Tailwind to create a neo-brutalism themed ui components with my own creative touch so the app stands out and it's minimalist UI elements gives it a unique look without any third-party UI kits.
-- **Live Demo**: _Coming soon_ (will deploy to `vercel`).
+- **Styling**: Used Tailwind to build `neo-brutalism`-inspired UI components with my own creative touch so the app stands out and its minimalist elements give it a unique look without any third-party UI kits.
 
 ## Core Features
 
@@ -22,12 +23,12 @@ Interactive tree inspector with CRUD actions, persistence, undo, and drag-and-dr
 - ✅ Undo last mutation.
 - ✅ Drag-and-drop to move nodes.
 - ✅ Formatted JSON preview.
-- ⏳ Live demo (`vercel`) pending.
 
 ## Comparison & Trade-offs
 
-- **`localStorage` vs. Context/Redux**: persistence was mandatory, and the dataset lives in a single tree. Using `localStorage` with local component state keeps the logic minimal while satisfying the refresh requirement, avoiding extra boilerplate from global stores.
+- **`localStorage` vs. Context/Redux**: persistence was mandatory, and the dataset lives in a single tree. Using `localStorage` with local component state keeps the logic minimal while satisfying the refresh requirement, avoiding extra boilerplate from global stores like Redux / ContextProvider.
 - **React + `vite` vs. Next JS**: the app is a single interactive view; `vite` delivers faster dev feedback and smaller bundles without routing or SSR overhead from Next JS.
+- **HTML symbols instead of 3rd party icons**: Used plain HTML symbols like `┣` and `┗` to render the tree lines, keeping the UI lightweight while reinforcing the retro terminal aesthetic.
 
 ## Run Locally
 

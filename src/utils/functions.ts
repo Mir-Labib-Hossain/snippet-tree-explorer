@@ -98,8 +98,12 @@ export function renameNodeAtPath(
   if (!(key in parent) || key === nextKey || nextKey in parent) return false;
 
   const obj = parent as Record<string, unknown>;
-  obj[nextKey] = obj[key];
-  delete obj[key];
+  const entries = Object.entries(obj).map(([k, value]) =>
+    k === key ? [nextKey, value] : [k, value],
+  );
+
+  Object.keys(obj).forEach((k) => delete obj[k]);
+  Object.assign(obj, Object.fromEntries(entries));
   return true;
 }
 

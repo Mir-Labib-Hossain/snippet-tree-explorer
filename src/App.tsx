@@ -1,16 +1,12 @@
-import "./App.css";
 import { useMemo, useState } from "react";
 
 import ImportJsonModal from "./components/ImportJsonModal";
 import DeleteNodeModal from "./components/DeleteNodeModal";
 import RenameNodeModal from "./components/RenameNodeModal";
-
 import { Button } from "./components/ui/Button";
 import { Alert } from "./components/ui/Alert";
 import { Card } from "./components/ui/Card";
-
 import TreeView, { type TreeBranch } from "./components/TreeView";
-
 import {
   cloneTree,
   moveNode,

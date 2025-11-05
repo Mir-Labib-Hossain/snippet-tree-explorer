@@ -112,6 +112,10 @@ function TreeNode({
   const showRename = !parentIsArray;
   const isContainer = value !== null && typeof value === "object";
   const isDropTarget = dropTargetPath === path;
+  const displayLabel =
+    parentIsArray && (value === null || typeof value !== "object")
+      ? String(value)
+      : label;
 
   const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
     event.dataTransfer.setData("text/plain", path);
@@ -214,7 +218,7 @@ function TreeNode({
               selectedPath === path ? "text-[#4F92EE]" : ""
             }`}
           >
-            {label}
+            {displayLabel}
           </span>
         </div>
 

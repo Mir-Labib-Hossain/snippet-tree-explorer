@@ -3,6 +3,22 @@
     "region": "Dhaka, Bangladesh",
     "established": 2015,
     "driver_types": {
+      "nid": {
+        "name": "National ID",
+        "required": true,
+        "nid": {
+          "name": "National ID",
+          "required": true,
+          "nid": {
+            "name": "National ID",
+            "required": true,
+            "nid": {
+              "name": "National ID",
+              "required": true
+            }
+          }
+        }
+      },
       "auto": {
         "img_url": "https://example.com/driver.png",
         "active": true,
@@ -35,7 +51,56 @@
         }
       },
       "name_bn": "বাইক",
-      "name_en": "Bike"
+      "name_en": "Bike",
+      "nid": {
+        "name": "National ID",
+        "required": true,
+        "nid": {
+          "name": "National ID",
+          "required": true,
+          "nid": {
+            "name": "National ID",
+            "required": true
+          }
+        }
+      },
+      "driver_types": {
+        "nid": {
+          "name": "National ID",
+          "required": true,
+          "nid": {
+            "name": "National ID",
+            "required": true,
+            "nid": {
+              "name": "National ID",
+              "required": true,
+              "nid": {
+                "name": "National ID",
+                "required": true
+              }
+            }
+          }
+        },
+        "auto": {
+          "img_url": "https://example.com/driver.png",
+          "active": true,
+          "open_for_signup": false,
+          "require_otp": true,
+          "documents": {
+            "license": {
+              "name": "License",
+              "required": true
+            },
+            "nid": {
+              "name": "National ID",
+              "required": true
+            }
+          },
+          "name_bn": "অটো",
+          "name_en": "Auto"
+        },
+        "otp_signup_enabled": false
+      }
     }
   }
 }

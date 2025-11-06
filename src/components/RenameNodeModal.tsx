@@ -37,13 +37,17 @@ export default function RenameNodeModal({
     const trimmed = name.trim();
     if (!trimmed) {
       setError("Please provide a name.");
-    } else if (trimmed.includes(".")) {
-      setError("Dots are not allowed in key names.");
-    } else if (siblingKeys.includes(trimmed)) {
-      setError("A sibling with this name already exists.");
-    } else {
-      onConfirm(trimmed);
+      return;
     }
+    if (trimmed.includes(".")) {
+      setError("Dots are not allowed in key names.");
+      return;
+    }
+    if (siblingKeys.includes(trimmed)) {
+      setError("A sibling with this name already exists.");
+      return;
+    }
+    onConfirm(trimmed);
   };
 
   useEffect(() => {

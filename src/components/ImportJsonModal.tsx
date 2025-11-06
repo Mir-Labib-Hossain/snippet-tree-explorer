@@ -23,17 +23,19 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
         typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
 
       if (!isObject) {
-        throw new Error("Kindly enter a valid JSON object.");
+        setError("Kindly enter a valid JSON object.");
+        return;
       }
 
       if (Object.keys(parsed)?.length !== 1) {
-        throw new Error("JSON object must contain exactly one root property.");
+        setError("JSON object must contain exactly one root property.");
+        return;
       }
 
       onConfirm(parsed);
       onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to parse JSON.");
+    } catch {
+      setError("Kindly enter a valid JSON object.");
     }
   }
 

@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-
 import ImportJsonModal from "./components/ImportJsonModal";
 import DeleteNodeModal from "./components/DeleteNodeModal";
 import RenameNodeModal from "./components/RenameNodeModal";
@@ -160,9 +159,9 @@ function App() {
               <Card className="max-h-[70vh] overflow-auto shadow-md">
                 <TreeView
                   data={treeData}
+                  onMoveNode={onMoveNode}
                   selectedPath={selectedPath}
                   onSelectPath={saveSelectedPath}
-                  onMoveNode={onMoveNode}
                   openDeleteModal={() => toggleModal("deleteNode")}
                   openRenameModal={() => toggleModal("renameNode")}
                 />

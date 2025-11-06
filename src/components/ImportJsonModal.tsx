@@ -46,24 +46,19 @@ function ImportJsonModal({ treeData, onConfirm, onClose }: Props) {
       title="Import JSON"
       footer={
         <div className="flex justify-between w-full flex-wrap gap-2">
-          <div>
-            {!text && (
-              <Button
-                variant="success"
-                onClick={() => {
-                  setText(dummyData);
-                  if (error) {
-                    setError(null);
-                  }
-                }}
-              >
-                Save time
-                <span className="ml-2 text-sm font-light">
-                  (Insert Random Data)
-                </span>
-              </Button>
-            )}
-          </div>
+          <Button
+            variant="success"
+            onClick={() => {
+              setText(dummyData);
+              if (error) {
+                setError(null);
+              }
+            }}
+          >
+            Insert Random Data
+            <span className="ml-2 text-sm font-light">(Save Time)</span>
+          </Button>
+
           <div className="space-x-2">
             <Button variant="secondary" onClick={onClose}>
               Cancel

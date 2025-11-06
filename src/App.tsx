@@ -122,7 +122,7 @@ function App() {
 
   // Handle import confirm
   const onImport = (data: TreeBranch) => {
-    saveTreeData(data);
+    saveTreeData(data, !treeData);
     saveSelectedPath(null);
   };
 
@@ -142,69 +142,73 @@ function App() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f7f3ee]">
       <div className="container mx-auto px-4 py-8 space-y-6">
-        {/* Header */}
-        <div className="grid grid-cols-1 md:grid-cols-10 gap-4 mb-2">
-          <p className="col-span-1 md:col-span-4 text-2xl font-bold tracking-wide text-[#333]">
-            Tree
-          </p>
-          <p className="col-span-1 md:col-span-6 text-2xl truncate text-[#444]">
-            {breadcrumb}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
-          {/* Tree Section */}
-          <div className="col-span-1 md:col-span-4">
-            {treeData ? (
-              <Card className="max-h-[70vh] overflow-auto shadow-md">
-                <TreeView
-                  data={treeData}
-                  onMoveNode={onMoveNode}
-                  selectedPath={selectedPath}
-                  onSelectPath={saveSelectedPath}
-                  openDeleteModal={() => toggleModal("deleteNode")}
-                  openRenameModal={() => toggleModal("renameNode")}
-                />
-              </Card>
-            ) : (
-              <Alert>Import a JSON object to explore it as a tree.</Alert>
-            )}
-          </div>
-
-          {/* JSON View & Controls */}
-          <div className="col-span-1 md:col-span-6 space-y-4">
-            {treeData ? (
-              <Card className="max-h-[70vh] overflow-auto shadow-md">
-                <pre className="whitespace-pre text-sm font-mono cursor-default">
-                  {stringifyTreeData(treeData)}
-                </pre>
-              </Card>
-            ) : (
-              <Alert>Add a JSON text to view the tree structure.</Alert>
-            )}
-
-            {/* Controls */}
-            <div className="flex gap-4 flex-wrap">
-              <Button onClick={() => toggleModal("importJson")}>
-                {treeData ? "Modify" : "Import"}
-              </Button>
-              <Button
-                onClick={clearTreeData}
-                variant="danger"
-                disabled={!treeData}
-              >
-                Clear
-              </Button>
-              <Button
-                onClick={undoLastAction}
-                variant="secondary"
-                disabled={!lastHistory}
-              >
-                Undo
-              </Button>
+        {treeData && (
+          <>
+            {/* Header */}
+            <div className="grid grid-cols-1 md:grid-cols-10 gap-4 mb-2">
+              <p className="col-span-1 md:col-span-4 text-2xl font-bold tracking-wide text-[#333]">
+                Tree
+              </p>
+              <p className="col-span-1 md:col-span-6 text-2xl truncate text-[#444]">
+                {breadcrumb}
+              </p>
             </div>
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
+              {/* Tree Section */}
+              <div className="col-span-1 md:col-span-4">
+                {treeData && (
+                  <Card className="max-h-[70vh] overflow-auto shadow-md">
+                    <TreeView
+                      data={treeData}
+                      onMoveNode={onMoveNode}
+                      selectedPath={selectedPath}
+                      onSelectPath={saveSelectedPath}
+                      openDeleteModal={() => toggleModal("deleteNode")}
+                      openRenameModal={() => toggleModal("renameNode")}
+                    />
+                  </Card>
+                )}
+              </div>
+
+              {/* JSON View & Controls */}
+              <div className="col-span-1 md:col-span-6 space-y-4">
+                <Card className="max-h-[70vh] overflow-auto shadow-md">
+                  <pre className="whitespace-pre text-sm font-mono cursor-default">
+                    {stringifyTreeData(treeData)}
+                  </pre>
+                </Card>
+
+                {/* Controls */}
+                <div className="flex gap-4 flex-wrap">
+                  <Button onClick={() => toggleModal("importJson")}>
+                    {treeData ? "Modify" : "Import"}
+                  </Button>
+                  <Button
+                    onClick={clearTreeData}
+                    variant="danger"
+                    disabled={!treeData}
+                  >
+                    Clear
+                  </Button>
+                  <Button
+                    onClick={undoLastAction}
+                    variant="secondary"
+                    disabled={!lastHistory}
+                  >
+                    Undo
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {!treeData && (
+          <Alert className="flex items-center flex-col w-fit gap-2 mx-auto py-8">
+            Import a JSON object to explore it as a tree.
+            <Button onClick={() => toggleModal("importJson")}>Import</Button>
+          </Alert>
+        )}
       </div>
 
       {/* Modals */}

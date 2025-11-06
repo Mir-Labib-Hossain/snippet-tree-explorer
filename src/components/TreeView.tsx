@@ -214,7 +214,7 @@ function TreeNode({
         onDrop={handleDrop}
       >
         <div className="whitespace-pre-wrap flex items-center">
-          <span className="text-[30px] leading-[30px] flex items-center font-extralight">
+          <span className="text-[30px] leading-[30px] flex items-center font-extralight text-[#232323]">
             {nodeLabelPrefix}
           </span>
           <span
@@ -297,10 +297,10 @@ const ActionButton = ({
   return (
     <button
       type="button"
-      className={`text-white w-5 h-5 flex items-center justify-center rounded-full cursor-pointer text-xs ${variantClasses[variant]}`}
+      className={`text-white w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-xs ${variantClasses[variant]}`}
       onClick={handleClick}
     >
-      {variant === "rename" ? "✎" : "-"}
+      {variant === "rename" ? "✎" : "—"}
     </button>
   );
 };

@@ -41,7 +41,7 @@ function App() {
 
   // Memoize the breadcrumb to show navigation path
   const breadcrumb = useMemo(
-    () => selectedPath?.split(".").join(" > ") ?? "",
+    () => selectedPath?.split(".").join(" › ") ?? "",
     [selectedPath],
   );
 
